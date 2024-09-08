@@ -14,6 +14,17 @@ public:
 
 
     // Overload operators
+    inline uint128_t& operator =(const uint128_t& other)
+    {
+        if (this != &other)
+        {
+            high_ = other.high_;
+            low_ = other.low_;
+        }
+
+        return *this;
+    }
+    
     inline uint128_t operator +(const uint128_t& other) const
     {
         uint64_t low = low_ + other.low_;
@@ -26,15 +37,19 @@ public:
         return (other.low_ == low_) && (other.high_ == high_);
     } 
 
-    inline friend std::ostream& operator <<(std::ostream& os, const uint128_t& val)
+    // Output stream operator
+    inline friend std::ostream& operator<<(std::ostream& os, const uint128_t& val)
     {
-        os << val.high_ << val.low_;
+        os << val.high_ << (val.low_ < 0x1000000000000000 ? "0" : "") << std::hex << val.low_;
         return os;
     }
 
 private:
     uint64_t high_, low_;
 };
+
+const uint128_t MAX_UINT128;
+
 
 } // namespace GigaInt
 
